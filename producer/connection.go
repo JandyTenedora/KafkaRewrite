@@ -2,8 +2,11 @@ package producer
 
 import (
 	"errors"
+	"fmt"
 	"net"
 )
+
+var netDial = net.Dial
 
 type Connection struct {
 	conn net.Conn
@@ -19,7 +22,9 @@ Returns:
   - An error if the connection can not be established
 */
 func NewConnection(brokerAddress string) (*Connection, error) {
-	conn, err := net.Dial("tcp", brokerAddress)
+	conn, err := netDial("tcp", brokerAddress)
+	fmt.Println(brokerAddress)
+	fmt.Printf("connection: %v, error: %v \n", conn, err)
 	if err != nil {
 		return nil, errors.New("failed to establish connection")
 	}
