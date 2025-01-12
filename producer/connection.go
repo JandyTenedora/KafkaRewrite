@@ -1,6 +1,7 @@
 package producer
 
 import (
+	"encoding/binary"
 	"errors"
 	"fmt"
 	"net"
@@ -23,8 +24,6 @@ Returns:
 */
 func NewConnection(brokerAddress string) (*Connection, error) {
 	conn, err := netDial("tcp", brokerAddress)
-	fmt.Println(brokerAddress)
-	fmt.Printf("connection: %v, error: %v \n", conn, err)
 	if err != nil {
 		return nil, errors.New("failed to establish connection")
 	}
@@ -38,9 +37,18 @@ func NewConnection(brokerAddress string) (*Connection, error) {
 // - message: The serialized message payload to send.
 // Returns:
 // - An error if the message could not be sent successfully.
-func (c *Connection) WriteMessage(topic string, message []byte) error {
+//
+// Topic to be stored as 4 byte header of message
+func (c *Connection) WriteMessage(topic int32, message []byte) error {
 	// TODO: Implement the logic to send a message over the connection.
-	return errors.New("WriteMessage not implemented")
+	topicBuffer := make([]byte, 4)
+	binary.LittleEndian.PutUint32(topicBuffer, uint32(topic))
+	bufferedMessage := append(topicBuffer, message...)
+	_, err := c.conn.Write([]byte(bufferedMessage))
+	if err != nil {
+		return fmt.Errorf("Error in writing message: %v", err)
+	}
+	return err //Should always be nil
 }
 
 // Close terminates the TCP connection to the Kafka broker.
