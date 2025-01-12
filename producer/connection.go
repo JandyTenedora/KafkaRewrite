@@ -48,13 +48,16 @@ func (c *Connection) WriteMessage(topic int32, message []byte) error {
 	if err != nil {
 		return fmt.Errorf("Error in writing message: %v", err)
 	}
-	return err //Should always be nil
+	return err // Should always be nil
 }
 
 // Close terminates the TCP connection to the Kafka broker.
 // Returns:
 // - An error if the connection could not be closed successfully.
 func (c *Connection) Close() error {
-	// TODO: Implement the logic to close the TCP connection.
-	return errors.New("Close not implemented")
+	err := c.conn.Close()
+	if err != nil {
+		return fmt.Errorf("Error in closing connection: %v", err)
+	}
+	return err
 }

@@ -80,27 +80,24 @@ func TestNewConnection_Failure(t *testing.T) {
 	}
 }
 
-// Test WriteMessage (method not implemented)
-//func TestWriteMessage(t *testing.T) {
-//	conn := &Connection{conn: &mockConn{}}
-//	err := conn.WriteMessage("topic", []byte("message"))
-//	if err == nil {
-//		t.Fatalf("expected error, got nil")
-//	}
-//	if err.Error() != "WriteMessage not implemented" {
-//		t.Fatalf("expected 'WriteMessage not implemented', got %v", err)
-//	}
-//}
-//
+// Test WriteMessage 
+func TestWriteMessage(t *testing.T) {
+	conn := &Connection{conn: &mockConn{}}
+	err := conn.WriteMessage(int32(10), []byte("message"))
+	if err != nil {
+		t.Fatalf("expected success, got %v", err)
+	}
+}
+
 //// Test Close (method not implemented)
-//func TestClose(t *testing.T) {
-//	conn := &Connection{conn: &mockConn{}}
-//	err := conn.Close()
-//	if err == nil {
-//		t.Fatalf("expected error, got nil")
-//	}
-//	if err.Error() != "Close not implemented" {
-//		t.Fatalf("expected 'Close not implemented', got %v", err)
-//	}
-//}
-//
+func TestClose(t *testing.T) {
+	conn := &Connection{conn: &mockConn{}}
+	err := conn.Close()
+	if err == nil {
+		t.Fatalf("expected error, got nil")
+	}
+	if err.Error() != "Close not implemented" {
+		t.Fatalf("expected 'Close not implemented', got %v", err)
+	}
+}
+
