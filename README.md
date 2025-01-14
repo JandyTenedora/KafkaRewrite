@@ -14,6 +14,7 @@ kafka-producer/
 │   ├── config.go
 │   └── connection.go
 ├── utils/
+│   └── hash.go
 │   └── logger.go
 └── go.mod
 ```
@@ -114,7 +115,25 @@ kafka-producer/
 
 ---
 
-### **5. `utils/logger.go`**
+### **5. `utils/hash.go`**
+
+**Purpose**: Provides reusable logging functionality.
+
+**Functions**:
+1. `HashStringToInt32(input string)`:
+   - Logs informational messages with a specific prefix.
+
+**Responsibilities**:
+- Provide hash functions required across project 
+
+**Libraries Used**:
+- `fmt`: For printing.
+- `hash/fnv`: For introducing hash libraries.
+
+---
+
+
+### **6. `utils/logger.go`**
 
 **Purpose**: Provides reusable logging functionality.
 
@@ -133,7 +152,7 @@ kafka-producer/
 
 ---
 
-### **6. `go.mod`**
+### **7. `go.mod`**
 
 **Purpose**: Manages dependencies and specifies the module name.
 
@@ -144,26 +163,6 @@ kafka-producer/
 **Responsibilities**:
 - Ensure consistent dependency management.
 - Simplify module initialization.
-
----
-
-### Explanation of Unimplemented Functions
-
-#### 1. **Producer Functions**
-   - `NewProducer`: Creates a `Producer` instance. Connects to the broker and initializes resources.
-   - `SendMessage`: Serializes the message and sends it to the broker using the `Connection`.
-
-#### 2. **Connection Functions**
-   - `NewConnection`: Establishes a TCP connection to the Kafka broker.
-   - `WriteMessage`: Writes a message to the broker. This includes basic message formatting for the specified topic.
-
-#### 3. **Config**
-   - Contains settings like broker address and topic, simplifying initialization.
-
-#### 4. **Utils/Logger**
-   - Provides reusable logging functionality.
-
----
 
 ### Suggested Enhancements for Learning:
 1. **Message Batching**: Add a feature to batch messages before sending.
