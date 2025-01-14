@@ -1,14 +1,15 @@
-# Kafka Producer in Go
+# Kafka Rewrite in Go
 
-This project is a simple Kafka producer implemented in Go. It provides a foundational understanding of Kafka producers and how to handle basic message sending operations. The implementation is simplified for learning purposes and doesn't include all Kafka protocol features.
+This project is a simple Kafka Rewrite implemented in Go. It provides a foundational understanding of Kafka producers and how to handle basic message sending operations. It also implements a barebones Kafka broker to further simulate Kafka functionality
 
 ---
 
 ## Project Structure
 
 ```
-kafka-producer/
+kafka-rewrite/
 ├── main.go
+├── broker/
 ├── producer/
 │   ├── producer.go
 │   ├── config.go
@@ -20,6 +21,8 @@ kafka-producer/
 ```
 
 ---
+
+## Kafka_Rewrite
 
 ### **1. `main.go`**
 
@@ -42,7 +45,24 @@ kafka-producer/
 
 ---
 
-### **2. `producer/producer.go`**
+### **2. `go.mod`**
+
+**Purpose**: Manages dependencies and specifies the module name.
+
+**Fields**:
+- Module name (`module kafka-producer`).
+- Go version (`go 1.20`).
+
+**Responsibilities**:
+- Ensure consistent dependency management.
+- Simplify module initialization.
+
+## Broker
+
+
+## Producer
+
+### **1. `producer/producer.go`**
 
 **Purpose**: Handles high-level producer logic, including message sending and producer setup.
 
@@ -70,7 +90,7 @@ kafka-producer/
 
 ---
 
-### **3. `producer/config.go`**
+### **2. `producer/config.go`**
 
 **Purpose**: Manages configuration settings for the producer.
 
@@ -87,7 +107,7 @@ kafka-producer/
 
 ---
 
-### **4. `producer/connection.go`**
+### **3. `producer/connection.go`**
 
 **Purpose**: Handles low-level network communication with the Kafka broker.
 
@@ -115,7 +135,9 @@ kafka-producer/
 
 ---
 
-### **5. `utils/hash.go`**
+## Utils
+
+### **1. `utils/hash.go`**
 
 **Purpose**: Provides reusable logging functionality.
 
@@ -133,7 +155,7 @@ kafka-producer/
 ---
 
 
-### **6. `utils/logger.go`**
+### **2. `utils/logger.go`**
 
 **Purpose**: Provides reusable logging functionality.
 
@@ -150,21 +172,7 @@ kafka-producer/
 **Libraries Used**:
 - `log`: For logging messages.
 
----
-
-### **7. `go.mod`**
-
-**Purpose**: Manages dependencies and specifies the module name.
-
-**Fields**:
-- Module name (`module kafka-producer`).
-- Go version (`go 1.20`).
-
-**Responsibilities**:
-- Ensure consistent dependency management.
-- Simplify module initialization.
-
-### Suggested Enhancements for Learning:
+### Future Enhancements:
 1. **Message Batching**: Add a feature to batch messages before sending.
 2. **Retry Logic**: Implement retries on connection or message-send failure.
 3. **Custom Protocols**: Extend `WriteMessage` to mimic Kafka's protocol more closely.
