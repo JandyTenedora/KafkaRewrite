@@ -1,6 +1,6 @@
 # Kafka Rewrite in Go
 
-This project is a simple Kafka Rewrite implemented in Go. It provides a foundational understanding of Kafka producers and how to handle basic message sending operations. It also implements a barebones Kafka broker to further simulate Kafka functionality
+This project is a simple Kafka Rewrite implemented in Go. It provides a foundational understanding of Kafka producers and how to handle basic message sending operations. It also implements a barebones Kafka broker to further simulate Kafka functionality.
 
 ---
 
@@ -10,12 +10,15 @@ This project is a simple Kafka Rewrite implemented in Go. It provides a foundati
 kafka-rewrite/
 ├── main.go
 ├── broker/
+│   ├── broker.go
+│   ├── storage.go
+│   └── ack.go
 ├── producer/
 │   ├── producer.go
 │   ├── config.go
 │   └── connection.go
 ├── utils/
-│   └── hash.go
+│   ├── hash.go
 │   └── logger.go
 └── go.mod
 ```
@@ -57,8 +60,78 @@ kafka-rewrite/
 - Ensure consistent dependency management.
 - Simplify module initialization.
 
+---
+
 ## Broker
 
+### **1. `broker/broker.go`**
+
+**Purpose**: Core logic for managing producer connections, message routing, and topic-based communication.
+
+**Structs**:
+- `Broker`:
+  - Fields:
+    - `Address` (string): Address where the broker listens for connections.
+    - `Topics` (map[string][]byte): Stores messages organized by topic.
+    - `Connections` ([]net.Conn): Tracks active producer connections.
+
+**Methods**:
+1. `NewBroker(address string) *Broker`:
+   - Initializes a new broker instance.
+   - Sets up storage for topics and prepares to accept connections.
+
+2. `Start() error`:
+   - Starts the broker by listening for incoming producer connections on the specified address.
+   - Handles each connection in a separate goroutine.
+
+3. `HandleConnection(conn net.Conn)`:
+   - Reads messages from the producer connection.
+   - Parses the message into a topic and message body.
+   - Stores the message in the appropriate topic.
+
+4. `Stop()`:
+   - Gracefully shuts down the broker.
+   - Closes all active connections.
+
+---
+
+### **2. `broker/storage.go`**
+
+**Purpose**: Handles storage and retrieval of messages for topics.
+
+**Structs**:
+- `TopicStorage`:
+  - Fields:
+    - `Messages` (map[string][][]byte): A map of topic names to lists of messages.
+
+**Methods**:
+1. `NewTopicStorage() *TopicStorage`:
+   - Initializes a new in-memory storage system for topics.
+
+2. `AddMessage(topic string, message []byte)`:
+   - Appends a message to the specified topic.
+
+3. `GetMessages(topic string) [][]byte`:
+   - Retrieves all messages for a specific topic.
+
+4. `ListTopics() []string`:
+   - Returns a list of all topic names in the storage.
+
+---
+
+### **3. `broker/ack.go`**
+
+**Purpose**: Handles acknowledgment messages to confirm receipt of producer messages.
+
+**Functions**:
+1. `SendAck(conn net.Conn)`:
+   - Sends an acknowledgment message back to the producer after successfully receiving and storing a message.
+
+2. `ReceiveAck(conn net.Conn) error`:
+   - Waits for an acknowledgment from the producer or broker.
+   - Returns an error if no acknowledgment is received within a timeout.
+
+--- 
 
 ## Producer
 
@@ -177,6 +250,4 @@ kafka-rewrite/
 2. **Retry Logic**: Implement retries on connection or message-send failure.
 3. **Custom Protocols**: Extend `WriteMessage` to mimic Kafka's protocol more closely.
 4. **Testing**: Use Go’s testing framework (`testing` package) for unit tests.
-
-
 
