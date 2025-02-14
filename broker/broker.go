@@ -4,12 +4,14 @@ import (
 	"fmt"
 	"log"
 	"net"
+	"sync"
 )
 
 type Broker struct {
 	Address     string
 	Topics      map[string][]string
 	Connections []net.Conn
+	mu          sync.Mutex
 }
 
 func NewBroker(address string) *Broker {
@@ -67,4 +69,19 @@ func (broker *Broker) HandleConnection(conn net.Conn) {
 			return
 		}
 	}
+}
+
+func (broker *Broker) Stop() error {
+	broker.mu.Lock()
+	defer broker.mu.Unlock()
+
+	for _, conn := range broker.Connections {
+		if err := conn.Close(); err != nil {
+			return fmt.Errorf("Error closing connection: %v", err)
+		}
+	}
+
+	broker.Connections = nil
+	fmt.Println("Broker stopped and all connections closed")
+	return nil
 }
