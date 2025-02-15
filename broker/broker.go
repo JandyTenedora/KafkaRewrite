@@ -61,9 +61,7 @@ func (broker *Broker) HandleConnection(conn net.Conn) {
 		broker.Topics[topic] = append(broker.Topics[topic], message)
 
 		// Write back to Connection
-		_, err = conn.Write(
-			[]byte(fmt.Sprintf("Received data with topic: %s, message: %s", topic, message)),
-		)
+		err = broker.SendAck(conn)
 		if err != nil {
 			log.Printf("Error writing to connection %s: %v", conn.RemoteAddr(), err)
 			return
